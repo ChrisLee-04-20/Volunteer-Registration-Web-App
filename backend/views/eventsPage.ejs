@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a href="#" class="navbar-brand">Navbar</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item me-3">
+                            <a class="nav-link" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link active" href="/event">Events</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="/become/volunteer">Become volunteer</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-fluid px-5">
+        <div class="row justify-content-between align-items-center w-100">
+            <nav aria-lablel="breadcrumb" class="col-md-4 col-lg-2 w-75">
+                <ol class="breadcrumb bg-light bg-gradient w-50 px-sm-2 p-3 mt-4 rounded-3 d-flex align-items-center">
+                    <li class=" breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Events</li>
+                </ol>
+            </nav>
+            <div class="w-25 d-flex justify-content-end align-items-center">
+                <a href="/event/new" class="btn btn-primary text-center mt-2 w-auto">New</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- create row card-group -->
+            <% if (currentPageEventCount > 3) { %>
+                <% for (let i = 0; i < 2; i++ ) { %>
+                    <div class="card-group">         
+                        <% for (let j = 0 + i * 3; j < 3 * (i + 1) && j < currentPageEventCount; j++ ) { %>
+                            <div class="col-12 col-lg-4">
+                                <div class="card h-100">
+                                    <a href="/event/detail/<%= events[j]._id %>">
+                                        <img src="<%= events[j].image %>" class="card-img-top ratio ratio-16x9" alt="...">
+                                    </a>
+                                        <div class="card-body d-flex flex-column justify-content-between">
+                                            <h5 class="card-title"><%= events[j].eventTitle %></h5>
+                                            <p class="card-text"><%= events[j].description %></p>
+                                            <p class="card-text">
+                                                <small class="text-muted">Last updated 
+                                                    <% let mins = formatISODateToMins(events[j].updatedAt) %>
+                                                    <%= 
+                                                        (mins > 1440) ?  getDay(mins) + " days ago"  : 
+                                                        (mins > 60) ? getHour(mins) + " hours ago" : mins + " mins ago" 
+                                                    %> 
+                                                </small>
+                                            </p>
+                                            <div class="w-100 d-flex justify-content-end float-end">
+                                                <a href="/event/edit/<%= events[j]._id %>" class="btn btn-outline-primary float-end px-sm-3 px-2 py-2 w-25">Edit</a>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <div class="card-group">         
+                    <% for (let j = 0; j < currentPageEventCount; j++ ) { %>
+                        <div class="col-12 col-lg-4">
+                            <div class="card h-100">
+                                <a href="/event/detail/<%= events[j]._id %>">
+                                    <img src="<%= events[j].image %>" class="card-img-top ratio ratio-16x9" alt="...">
+                                </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%= events[j].eventTitle %></h5>
+                                        <p class="card-text"><%= events[j].description %></p>
+                                        <p class="card-text">
+                                            <small class="text-muted">Last updated 
+                                                <% let mins = formatISODateToMins(events[j].updatedAt) %>
+                                                <%= 
+                                                    (mins > 1440) ?  getDay(mins) + " days ago"  : 
+                                                    (mins > 60) ? getHour(mins) + " hours ago" : mins + " mins ago" 
+                                                %> 
+                                            </small>
+                                        </p>
+                                        <a href="/event/edit/<%= events[j]._id %>" class="btn btn-outline-primary float-end px-2 py-2 w-25">Edit</a>
+                                    </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+        <nav class="mt-4" aria-label="Page navigation example">
+            <ul class="pagination justify-content-center mb-5">
+                <!-- handle the other events pages -->
+                    <% if (currentPage < 10) { %>
+                        <% for (let j = 1; j <= 10; j++ ) { %>
+                            <% if (j == currentPage) { %>
+                                <li class="page-item active"><a class="page-link" href="/event/page?page=<%= j %>"><%= j %></a></li>
+                            <% } else { %>
+                                <li class="page-item"><a class="page-link" href="/event/page?page=<%= j %>"><%= j %></a></li>
+                            <% } %>
+                        <% } %>
+
+                        <li class="page-item disabled"><a class="page-link disabled" >...</a></li>
+                        <li class="page-item"><a class="page-link" href="/event/page?page=<%= numberOfPages %>"><%= numberOfPages %></a></li>
+                    <% } else if (currentPage > numberOfPages - 10) { %>
+                        <li class="page-item"><a class="page-link" href="/event/page?page=1">1</a></li>
+                        <li class="page-item disabled"><a class="page-link disabled" >...</a></li>
+
+                        <% for (let j = currentPage - 10; j <= numberOfPages ; j++ ) { %>
+                            <% if (j == currentPage) { %>
+                                <li class="page-item active"><a class="page-link" href="/event/page?page=<%= j %>"><%= j %></a></li>
+                            <% } else { %>
+                                <li class="page-item"><a class="page-link" href="/event/page?page=<%= j %>"><%= j %></a></li>
+                            <% } %>
+                        <% } %>
+                    <% } else { %>
+                        <li class="page-item"><a class="page-link" href="/event/page?page=1">1</a></li>
+                        <li class="page-item disabled"><a class="page-link disabled" >...</a></li>
+    
+                        <% for (let j = currentPage - 5; j < currentPage; j++ ) { %>
+                            <li class="page-item"><a class="page-link" href="/event/page?page=<%= j %>"><%= j %></a></li>
+                        <% } %>
+    
+                        <% for (let k = currentPage; k < parseInt(currentPage) + 6; k++ ) { %>
+                            <% if (k == currentPage) { %>
+                                <li class="page-item active"><a class="page-link" href="/event/page?page=<%= k %>"><%= k %></a></li>
+                            <% } else { %>
+                                <li class="page-item"><a class="page-link" href="/event/page?page=<%= k %>"><%= k %></a></li>
+                            <% } %>
+                        <% } %>
+    
+                        <li class="page-item disabled"><a class="page-link disabled" >...</a></li>
+                        <li class="page-item"><a class="page-link" href="/event/page?page=<%= numberOfPages %>"><%= numberOfPages %></a></li>
+                    <% } %>
+            </ul>
+        </nav>
+    </main>
+
+    <!-- function for calculating the events last updated time to minutes -->
+    <!-- not for good practice / it should created in the new ejs file and use @include to import it -->
+    <%
+        function formatISODateToMins(isoDate) {
+            let current = new Date();
+            let inputDate = new Date(isoDate)
+            let mins = new Date(current.getTime() - inputDate.getTime()) / 1000 / 60;
+            mins = Math.ceil(mins);
+            return(mins);
+        }
+
+        function getDay(mins) {
+            return (Math.ceil(mins / (24 * 60)));
+        }
+
+        function getHour(mins) {
+            return (Math.round((mins / 60) * 10) / 10);
+        }
+    %>
+
+</body>
+
+</html>

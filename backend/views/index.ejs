@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a href="#" class="navbar-brand">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item me-3">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item me-3">
+              <a class="nav-link" href="/event">Events</a>
+            </li>
+            <li class="nav-item me-3">
+              <a class="nav-link" href="/become/volunteer">Become volunteer</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid px-5 px-sm-3">
+    <section>
+      <div id="carouselExampleIndicators" class="carousel slide px-2 px-sm-0 my-4" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+            aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+            aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://picsum.photos/800/170" class="d-block w-100 h-100"  alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="https://picsum.photos/800/170" class="d-block w-100 h-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="https://picsum.photos/800/170" class="d-block w-100 h-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="px-4">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a href="" class="nav-link active">Recent</a>
+        </li>
+      </ul>
+
+      <!-- 2023/10/03 render the cards based on the lastest edit date of the posts -->
+      <div class="container-fluid mb-5">
+        <div class="row">
+          <div class="card-group">         
+            <% if (totalEvents > 0 ) { %>
+            <% for (let j = 0; j < totalEvents; j++ ) { %>
+                <div class="col-12 col-lg-4">
+                    <div class="card h-100">
+                        <a href="/event/detail/<%= events[j]._id %>">
+                            <img src="<%= events[j].image %>" class="card-img-top" alt="...">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title"><%= events[j].eventTitle %></h5>
+                            <p class="card-text"><%= events[j].description %></p>
+                            <p class="card-text">
+                              <small class="text-muted">Last updated 
+                                  <% let mins = formatISODateToMins(events[j].updatedAt) %>
+                                  <%= 
+                                      (mins > 1440) ?  getDay(mins) + " days ago"  : 
+                                      (mins > 60) ? getHour(mins) + " hours ago" : mins + " mins ago" 
+                                  %> 
+                              </small>
+                          </p>
+                        </div>
+                     </div>
+                </div>
+            <% } %>
+            <% } else { %>
+              <div class="col-12">
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <h1 class="card-title">Currently does not have any events</h1>
+                    <p class="card-text h3">We will update soon!</p>
+                    <p class="card-text h3">You may register to be volunteer first</p>
+                    <a href="/become/volunteer" class="btn btn-primary float-end">Register</a>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+    <!-- function for calculating the events last updated time to minutes -->
+    <!-- not for good practice / it should created in the new ejs file and use @include to import it -->
+    <%
+        function formatISODateToMins(isoDate) {
+            let current = new Date();
+            let inputDate = new Date(isoDate)
+            let mins = new Date(current.getTime() - inputDate.getTime()) / 1000 / 60;
+            mins = Math.ceil(mins);
+            return(mins);
+        }
+
+        function getDay(mins) {
+            return (Math.ceil(mins / (24 * 60)));
+        }
+
+        function getHour(mins) {
+            return (Math.round((mins / 60) * 10) / 10);
+        }
+    %>
+
+</body>
+
+</html>
