@@ -39,8 +39,8 @@ jobs:
       # Archive the build artifacts from both frontend and backend
       - name: Archive production artifacts
         run: |
-          zip -r frontend.zip frontend/build/*
-          zip -r backend.zip backend/build/*
+          zip -r frontend.zip frontend/*
+          zip -r backend.zip backend/*
 
       # Upload frontend artifact
       - name: Upload frontend artifact
