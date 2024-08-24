@@ -54,8 +54,8 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
-        # run: unzip release.zip -d backend/
+        # run: unzip release.zip
+        run: unzip release.zip -d backend/
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -70,6 +70,6 @@ jobs:
         with:
           app-name: 'Volunteer-System-Backend'
           slot-name: 'Production'
-          package: .
-          # package: backend/
+          # package: .
+          package: backend/
           
