@@ -106,14 +106,14 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Volunteer-System'
-          slot-name: 'production' # Remove this line if not deploying to a slot
+          # slot-name: 'production' # Remove this line if not deploying to a slot
           package: './frontend.zip'
 
             # Deploy Backend to Azure Web App
-      - name: Deploy Backend to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'Volunteer-System'
-          slot-name: 'production' # Remove this line if not deploying to a slot
-          package: './backend.zip'
+      # - name: Deploy Backend to Azure Web App
+      #   uses: azure/webapps-deploy@v3
+      #   with:
+      #     app-name: 'Volunteer-System'
+      #     slot-name: 'production' # Remove this line if not deploying to a slot
+      #     package: './backend.zip'
           
