@@ -34,7 +34,6 @@ jobs:
         run: |
           cd backend
           npm install
-          npm run build
           cd ..
 
       # Archive the build artifacts from both frontend and backend
